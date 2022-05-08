@@ -13,8 +13,6 @@ public class Main {
 		  //db.getAllDates();
 		 // db.getAllCategories();
 			new Quiz(db);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();

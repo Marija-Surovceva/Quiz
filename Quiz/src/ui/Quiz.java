@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -19,7 +20,7 @@ import database.Database;
 public class Quiz extends JFrame implements ActionListener {
 
 	// Referenz zu Datenbank
-	private Database db;
+	public Database db;
 
 	// questionId
 	private int index = 1;
@@ -65,22 +66,22 @@ public class Quiz extends JFrame implements ActionListener {
 	});
 
 	private void initialisiereTextField() {
-		textfield.setBounds(0, 0, 650, 50);
+		textfield.setBounds(0, 0, 650, 40);
 		textfield.setBackground(new Color(00, 33, 66));
 		textfield.setForeground(new Color(252, 202, 3));
-		textfield.setFont(new Font("Ink Free", Font.BOLD, 50));
+		textfield.setFont(new Font("Ink Free", Font.BOLD, 40));
 		textfield.setBorder(BorderFactory.createBevelBorder(1));
 		textfield.setHorizontalAlignment(JTextField.CENTER);
 		textfield.setEditable(false);
 	}
 
 	private void initialisiereTextArea() {
-		textarea.setBounds(0, 50, 650, 50);
+		textarea.setBounds(0, 40, 650, 60);
 		textarea.setLineWrap(true);
 		textarea.setWrapStyleWord(true);
 		textarea.setBackground(new Color(00, 33, 66));
 		textarea.setForeground(new Color(252, 202, 3));
-		textarea.setFont(new Font("MV Boli", Font.BOLD, 35));
+		textarea.setFont(new Font("MV Boli", Font.BOLD, 20));
 		textarea.setBorder(BorderFactory.createBevelBorder(1));
 		textarea.setEditable(false);
 	}
@@ -88,7 +89,7 @@ public class Quiz extends JFrame implements ActionListener {
 	private void initialisiereButtons() {
 		for (int i = 0; i < buttons.length; i++) {
 			buttons[i].setBounds(0, (i + 1) * 100, 100, 100);
-			buttons[i].setFont(new Font("MV Boli", Font.BOLD, 35));
+			buttons[i].setFont(new Font("MV Boli", Font.BOLD, 25));
 			buttons[i].setFocusable(false);
 			buttons[i].addActionListener(this);
 			buttons[i].setText(String.valueOf((char)('A' + i)));
@@ -104,15 +105,15 @@ public class Quiz extends JFrame implements ActionListener {
 			answerLabels[i].setBounds(125, (i + 1) * 100, 500, 100);
 			answerLabels[i].setBackground(new Color(50, 50, 50));
 			answerLabels[i].setForeground(new Color(25, 255, 0));
-			answerLabels[i].setFont(new Font("MV Boli", Font.PLAIN, 35));
+			answerLabels[i].setFont(new Font("MV Boli", Font.PLAIN, 25));
 		}
 	}
 
 	private void initialisiereSecLeft() {
 		seconds_left.setBounds(535, 510, 100, 100);
-		seconds_left.setBackground(new Color(25, 25, 25));
+		seconds_left.setBackground(new Color(00, 33,66));
 		seconds_left.setForeground(new Color(255, 0, 0));
-		seconds_left.setFont(new Font("Ink Free", Font.BOLD, 60));
+		seconds_left.setFont(new Font("Ink Free", Font.BOLD, 50));
 		seconds_left.setBorder(BorderFactory.createBevelBorder(1));
 		seconds_left.setOpaque(true);
 		seconds_left.setHorizontalAlignment(JTextField.CENTER);
@@ -121,7 +122,7 @@ public class Quiz extends JFrame implements ActionListener {
 
 	private void initTimeLabel() {
 		time_label.setBounds(535, 475, 100, 25);
-		time_label.setBackground(new Color(50, 50, 50));
+		time_label.setBackground(new Color(00, 33, 66));
 		time_label.setForeground(new Color(252, 157, 3));
 		time_label.setFont(new Font("MV Boli", Font.PLAIN, 16));
 		time_label.setHorizontalAlignment(JTextField.CENTER);
@@ -129,7 +130,7 @@ public class Quiz extends JFrame implements ActionListener {
 
 	private void initNumberRight() {
 		number_right.setBounds(225, 225, 200, 100);
-		number_right.setBackground(new Color(25, 25, 25));
+		number_right.setBackground(new Color(00, 33, 66));
 		number_right.setForeground(new Color(25, 255, 0));
 		number_right.setFont(new Font("Ink Free", Font.BOLD, 50));
 		number_right.setBorder(BorderFactory.createBevelBorder(1));
@@ -139,7 +140,7 @@ public class Quiz extends JFrame implements ActionListener {
 
 	private void initPercentage() {
 		percentage.setBounds(225, 325, 200, 100);
-		percentage.setBackground(new Color(25, 25, 25));
+		percentage.setBackground(new Color(00, 33, 66));
 		percentage.setForeground(new Color(25, 255, 0));
 		percentage.setFont(new Font("Ink Free", Font.BOLD, 50));
 		percentage.setBorder(BorderFactory.createBevelBorder(1));
@@ -188,18 +189,22 @@ public class Quiz extends JFrame implements ActionListener {
 
 	public void nextQuestion() throws SQLException {
 		// Alle Fragen durch, Zeige Ergebnisse an
-		if (index >= total_questions) {
+		if (index > total_questions) {
 			results();
 		} else {
 			// Zeige nächste Frage an
-			textfield.setText("Question " + (index + 1));
-			String question = db.getQuestionById(index);
+			textfield.setText("Question " + (index));
+			String question = this.db.getQuestionById(index);
 			textarea.setText(question);
-			String[] possibleAnswers = db.getPossibleAnswers(index);
+			//System.out.println("11111111111"+this.db.getPossibleAnswers(index));
+			
+			
+			String[] possibleAnswers = this.db.getPossibleAnswers(index);
 			// Zeige mögliche Antworten an
 			for (int i = 0; i < possibleAnswers.length; i++) {
 				answerLabels[i].setText(possibleAnswers[i]);
 			}
+			
 			timer.start();
 		}
 	}
@@ -385,7 +390,7 @@ public class Quiz extends JFrame implements ActionListener {
 			answerLabels[i].setText("");
 		}
 
-		number_right.setText("(" + correct_guesses + "/" + total_questions + ")");
+		number_right.setText("(" + correct_guesses + "/" + (total_questions) + ")");
 		percentage.setText(result + "%");
 		add(number_right);
 		add(percentage);
